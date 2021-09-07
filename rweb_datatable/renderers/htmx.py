@@ -98,7 +98,15 @@ def make_th(table: Table, data: Dataset, context: TableContext, column: Column) 
             del args["sort_by1"]
 
         sort_url = url(path=context.path, args=args, search=context.search, **sort_args)
-        a = Node("a", attributes={"href": sort_url, "data-hx-get": sort_url, "data-hx-target": context.hx_target})
+        a = Node(
+            "a",
+            attributes={
+                "href": sort_url,
+                "data-hx-get": sort_url,
+                "data-hx-target": context.hx_target,
+                "data-hx-select": context.hx_target,
+            },
+        )
         th += a
         target = a
     target += column.title
