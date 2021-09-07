@@ -114,7 +114,7 @@ def make_tbody(table: Table, data: Dataset, context: TableContext) -> Node:
             tr = tbody.node("tr")
             for col_id, col in table.columns.items():
                 value = row.get(col_id)
-                rendered_value = render_cell(context=context, value=value, renderer=col.render_body)
+                rendered_value = render_cell(context=context, row=row, value=value, renderer=col.render_body)
                 tr.node("td", rendered_value)
     else:
         tr = tbody.node("tr")
@@ -122,11 +122,14 @@ def make_tbody(table: Table, data: Dataset, context: TableContext) -> Node:
     return tbody
 
 
-def render_cell(context: TableContext, value: str, renderer: Union[None, str, Callable]):
+def render_cell(context: TableContext, row, value: str, renderer: Union[None, str, Callable]):
     if not renderer:
         renderer = str
     try:
-        return renderer(value)
+        try:
+            return renderer(value=value, row=row)
+        except Exception:
+            return renderer(value)
     except Exception as e:
         raise ValueError(f"Could not render table cell context={context}, value={value}, renderer={renderer}") from e
 
