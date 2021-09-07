@@ -187,7 +187,13 @@ def make_pagination_li(
         a_attributes["aria-disabled"] = True
     else:
         a_attributes.update(
-            {"href": pagination_url, "data-hx-get": pagination_url, "data-hx-target": target, "aria-label": aria_label}
+            {
+                "href": pagination_url,
+                "data-hx-get": pagination_url,
+                "data-hx-target": target,
+                "data-hx-select": target,
+                "aria-label": aria_label,
+            }
         )
     li = Node("li", attributes=li_attributes)
     li += Node("a", text, attributes=a_attributes,)
