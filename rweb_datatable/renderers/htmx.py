@@ -42,6 +42,7 @@ def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
             "hx-select": f"#table-data-{table.id}",
             "hx-trigger": "keyup changed delay:500ms",
             "hx-preserve": True,
+            **context.search_box_attributes
         },
     )
 
