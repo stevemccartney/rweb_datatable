@@ -26,7 +26,18 @@ def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
     div = Node("div", attributes={"class": "d-flex justify-content-between align-items-center mb-3"})
     download_url = url(context.path, download="csv", **context.args)
     div.node("div", Node("a", "Download", attributes={"href": download_url, "class": "btn btn-primary "}))
-    form = div.node("form", attributes={"method": "GET", "class": "input-group", "style": "max-width: 15rem"})
+    form = div.node(
+        "form",
+        attributes={
+            "method": "GET",
+            "class": "input-group",
+            "style": "max-width: 15rem",
+            "hx-get": url(context.path, args=context.args, exclude=["search"]),
+            "hx-target": f"#table-data-{table.id}",
+            "hx-select": f"#table-data-{table.id}",
+            **context.search_box_attributes,
+        },
+    )
     form.node(
         "input",
         attributes={
@@ -37,12 +48,11 @@ def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
             "aria-label": "Search",
             "placeholder": "Search...",
             "value": context.search or "",
+            "hx-preserve": True,
             "hx-get": url(context.path, args=context.args, exclude=["search"]),
             "hx-target": f"#table-data-{table.id}",
             "hx-select": f"#table-data-{table.id}",
             "hx-trigger": "keyup changed delay:500ms",
-            "hx-preserve": True,
-            **context.search_box_attributes
         },
     )
 
