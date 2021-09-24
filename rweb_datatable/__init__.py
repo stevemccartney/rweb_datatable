@@ -1,12 +1,12 @@
 import math
-from typing import Dict
+from typing import Dict, Optional
 
 from rweb_datatable.html import Node
 from rweb_datatable.models import Table, TableContext, SortColumn, Dataset, Column, Pagination, PaginationPage
 from rweb_datatable.utils import url, make_table_section_id
 
 
-def get_table_context_from_args(table: Table, args: dict) -> TableContext:
+def get_table_context_from_args(table: Table, args: dict, extra_args: Optional[dict]=None) -> TableContext:
     """
     Create a TableContext object from a set of incoming arguments
 
@@ -28,6 +28,7 @@ def get_table_context_from_args(table: Table, args: dict) -> TableContext:
         args=dict(args),
         is_download=is_download,
         search=search,
+        extra_args=extra_args if extra_args else {}
     )
 
 

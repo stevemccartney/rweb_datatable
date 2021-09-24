@@ -86,4 +86,6 @@ class TableContext:
     is_download: bool = field(default=False)
     search: Optional[str] = field(default=None)
     search_box_attributes: dict = field(default_factory=dict)
+    # additional args used for formatting
+    extra_args: dict = field(default_factory=dict)
 

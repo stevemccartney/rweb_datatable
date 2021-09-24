@@ -120,7 +120,7 @@ def make_th(table: Table, data: Dataset, context: TableContext, column: Column) 
         )
         th += a
         target = a
-    target += column.title
+    target += column.title.format(**context.args, **context.extra_args)
     target += " "
     target += Node("span", sort_symbol,)
     return th
