@@ -33,8 +33,9 @@ def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
             "class": "input-group",
             "style": "max-width: 15rem",
             "hx-get": url(context.path, args=context.args, exclude=["search"]),
-            "hx-target": f"#table-data-{table.id}",
-            "hx-select": f"#table-data-{table.id}",
+            "hx-target": context.hx_target,
+            "hx-select": context.hx_target,
+            "hx-trigger": "keyup delay:500ms from:#search",
             **context.search_box_attributes,
         },
     )
@@ -48,11 +49,8 @@ def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
             "aria-label": "Search",
             "placeholder": "Search...",
             "value": context.search or "",
-            "hx-preserve": True,
-            "hx-get": url(context.path, args=context.args, exclude=["search"]),
-            "hx-target": f"#table-data-{table.id}",
-            "hx-select": f"#table-data-{table.id}",
-            "hx-trigger": "keyup changed delay:500ms",
+            "autofocus": "autofocus",
+            "hx-preserve": "true",
         },
     )
 
