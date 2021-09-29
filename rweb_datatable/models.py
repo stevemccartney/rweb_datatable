@@ -12,9 +12,9 @@ class Column:
     render_header: StringOrCallable = field(default=None)
     render_body: StringOrCallable = field(default=None)
     render_footer: StringOrCallable = field(default=None)
-    render_header_config: Any = field(default=None)
-    render_body_config: Any = field(default=None)
-    render_footer_config: Any = field(default=None)
+    render_header_config: Any = field(default_factory=dict)
+    render_body_config: Any = field(default_factory=dict)
+    render_footer_config: Any = field(default_factory=dict)
 
 
 @dataclass

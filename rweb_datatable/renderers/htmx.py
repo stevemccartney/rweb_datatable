@@ -81,10 +81,10 @@ def make_thead(table: Table, data: Dataset, context: TableContext) -> Node:
 
 
 def make_th(table: Table, data: Dataset, context: TableContext, column: Column) -> Node:
-    th = Node("th", attributes={"scope": "col"})
+    th = Node("th", attributes={"scope": "col", **column.render_header_config.get("attributes", {})})
     args = copy(context.args)
     target = th
-    sort_symbol = "&nbsp;"
+    sort_symbol = ""
     if column.is_sortable:
         current_dir = context.sort[column.id].sort_dir if column.id in context.sort else None
         if current_dir == "asc":
@@ -132,7 +132,7 @@ def make_tbody(table: Table, data: Dataset, context: TableContext) -> Node:
             for col_id, col in table.columns.items():
                 value = row.get(col_id)
                 rendered_value = render_cell(context=context, row=row, value=value, renderer=col.render_body)
-                tr.node("td", rendered_value)
+                tr.node("td", rendered_value, attributes=col.render_body_config.get("attributes"))
     else:
         tr = tbody.node("tr")
         tr.node("td", "There is no data to display", attributes={"colspan": len(table.columns)})
