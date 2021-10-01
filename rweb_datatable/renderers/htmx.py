@@ -49,7 +49,6 @@ def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
             "aria-label": "Search",
             "placeholder": "Search...",
             "value": context.search or "",
-            "autofocus": "autofocus",
             "hx-preserve": "true",
         },
     )
