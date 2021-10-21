@@ -92,13 +92,21 @@ def make_pagination_data(table: Table, data: Dataset, context: TableContext) -> 
     sections of a table:
     """
     max_page = math.ceil(data.total_rows / context.per_page)
-    base_params = dict(per_page=context.per_page)
+    base_params = context.args.copy()
+    base_params.update(dict(per_page=context.per_page))
     if context.search:
         base_params["search"] = context.search
 
     if context.sort:
         sort_cols = list(context.sort.values())
         base_params.update(dict(sort_by1=sort_cols[0].sort_by, sort_dir1=sort_cols[0].sort_dir))
+
+    # remove the page param from the base_params as it is set in each url explicitly below
+    try:
+        del base_params["page"]
+    except KeyError:
+        pass
+
     if context.page > 1:
         first_url = url(context.path, page=1, **base_params)
         prev_url = url(context.path, page=context.page - 1, **base_params)
