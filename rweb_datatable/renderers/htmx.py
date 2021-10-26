@@ -32,11 +32,10 @@ def make_actions(data: Dataset, table: Table, context: TableContext, search_butt
             "method": "GET",
             "class": "input-group",
             "style": "max-width: 15rem",
-            "action": url(context.path, args=context.args, exclude=["search"]),
             "hx-get": url(context.path, args=context.args, exclude=["search"]),
             "hx-target": context.hx_target,
             "hx-select": context.hx_target,
-            "hx-trigger": "keyup delay:500ms from:#search",
+            "hx-trigger": "submit,keyup delay:500ms from:#search",
             **context.search_box_attributes,
         },
     )
