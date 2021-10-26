@@ -7,10 +7,10 @@ from rweb_datatable.utils import url, make_table_section_id
 
 
 def render_table_section(
-    data: Dataset, table: Table, context: TableContext, pagination: Optional[Pagination] = None
+    data: Dataset, table: Table, context: TableContext, pagination: Optional[Pagination] = None, search_button: bool=True
 ) -> Node:
     section = Node("section", attributes={"id": make_table_section_id(table)})
-    section += make_actions(data=data, table=table, context=context)
+    section += make_actions(data=data, table=table, context=context, search_button=search_button)
     table_data = Node("div", attributes={"id": f"table-data-{table.id}"})
     table_data += make_table(data=data, table=table, context=context)
     if pagination:
@@ -19,7 +19,7 @@ def render_table_section(
     return section
 
 
-def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
+def make_actions(data: Dataset, table: Table, context: TableContext, search_button: bool=True) -> Node:
     """
     Table section that includes filters, download button, column selector eventually
     """
@@ -52,14 +52,14 @@ def make_actions(data: Dataset, table: Table, context: TableContext) -> Node:
             "hx-preserve": "true",
         },
     )
-
-    form.node(
-        "button",
-        """<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-</svg>""",
-        attributes={"class": "input-group-text btn btn-primary", "type": "submit"},
-    )
+    if search_button:
+        form.node(
+            "button",
+            """<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+    </svg>""",
+            attributes={"class": "input-group-text btn btn-primary", "type": "submit"},
+        )
     return div
 
 
