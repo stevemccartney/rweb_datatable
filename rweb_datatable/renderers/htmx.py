@@ -32,6 +32,7 @@ def make_actions(data: Dataset, table: Table, context: TableContext, search_butt
             "method": "GET",
             "class": "input-group",
             "style": "max-width: 15rem",
+            "action": url(context.path, args=context.args, exclude=["search"]),
             "hx-get": url(context.path, args=context.args, exclude=["search"]),
             "hx-target": context.hx_target,
             "hx-select": context.hx_target,
