@@ -63,6 +63,7 @@ class Pagination:
 class Dataset:
     rows: List[dict]
     total_rows: int
+    totals: Optional[dict] = field(default=None)
 
 
 @dataclass

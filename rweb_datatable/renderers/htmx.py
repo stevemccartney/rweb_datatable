@@ -67,6 +67,8 @@ def make_table(data: Dataset, table: Table, context: TableContext) -> Node:
     t = Node("table", attributes={"id": f"table-{table.id}", "class": "table table-striped table-hover table-sm"})
     t += make_thead(table=table, data=data, context=context)
     t += make_tbody(table=table, data=data, context=context)
+    if data.totals:
+        t += make_tfoot(table=table, data=data, context=context)
     return t
 
 
@@ -138,13 +140,28 @@ def make_tbody(table: Table, data: Dataset, context: TableContext) -> Node:
     return tbody
 
 
+def make_tfoot(table: Table, data: Dataset, context: TableContext) -> Optional[Node]:
+    if data.totals is None:
+        return
+
+    row = data.totals
+    tfoot = Node("tfoot", attributes={"class": "table-dark"})
+    tr = tfoot.node("tr")
+    for col_id, col in table.columns.items():
+        value = row.get(col_id)
+        rendered_value = render_cell(context=context, row=row, value=value, renderer=col.render_footer)
+        tr.node("th", rendered_value, attributes=col.render_footer_config.get("attributes"))
+
+    return tfoot
+
+
 def render_cell(context: TableContext, row, value: str, renderer: Union[None, str, Callable]):
     if not renderer:
         renderer = str
     try:
         try:
-            return renderer(value=value, row=row)
-        except Exception:
+            return renderer(value, row)
+        except Exception as e:
             return renderer(value)
     except Exception as e:
         raise ValueError(f"Could not render table cell context={context}, value={value}, renderer={renderer}") from e
