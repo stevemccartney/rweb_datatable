@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="rweb_datatable",
-    version="0.1.14",
+    version="0.1.15",
     author="Steve McCartney",
     author_email="python+rweb_datatable@reconvergent.com",
     url="https://github.com/stevemccartney/rweb_datatable",
