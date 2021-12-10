@@ -29,6 +29,7 @@ class Table:
     table_attributes: Dict[str, str] = field(default_factory=dict)
     thead_attributes: Dict[str, str] = field(default_factory=dict)
     tbody_attributes: Dict[str, str] = field(default_factory=dict)
+    extra_classes: str = field(default='')
 
 
 @dataclass

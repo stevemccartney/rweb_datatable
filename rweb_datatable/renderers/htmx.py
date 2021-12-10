@@ -64,7 +64,7 @@ def make_actions(data: Dataset, table: Table, context: TableContext, search_butt
 
 
 def make_table(data: Dataset, table: Table, context: TableContext) -> Node:
-    t = Node("table", attributes={"id": f"table-{table.id}", "class": "table table-striped table-hover table-sm"})
+    t = Node("table", attributes={"id": f"table-{table.id}", "class": "table table-striped table-hover table-sm " + table.extra_classes})
     t += make_thead(table=table, data=data, context=context)
     t += make_tbody(table=table, data=data, context=context)
     if data.totals:
