@@ -12,7 +12,9 @@ def render_table_section(
     section = Node("section", attributes={"id": make_table_section_id(table)})
     section += make_actions(data=data, table=table, context=context, search_button=search_button)
     table_data = Node("div", attributes={"id": f"table-data-{table.id}"})
-    table_data += make_table(data=data, table=table, context=context)
+    table_wrapper = Node("div", attributes={"class": "rweb-datatable-wrapper"})
+    table_data += table_wrapper
+    table_wrapper += make_table(data=data, table=table, context=context)
     if pagination:
         table_data += make_pagination(context=context, pagination=pagination)
     section += table_data
