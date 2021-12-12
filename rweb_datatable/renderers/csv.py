@@ -7,7 +7,7 @@ from rweb_datatable import Dataset, Table, TableContext
 def render_csv(data: Dataset, table: Table, context: TableContext) -> str:
     out = StringIO()
     writer = csv.writer(out)
-    columns = [col.title for col in table.columns.values()]
+    columns = [col.title.format(**context.args, **context.extra_args) for col in table.columns.values()]
     ids = [col.id for col in table.columns.values()]
     writer.writerow(columns)
     for row in data.rows:
