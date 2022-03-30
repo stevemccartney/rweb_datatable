@@ -7,10 +7,11 @@ from rweb_datatable.utils import url, make_table_section_id
 
 
 def render_table_section(
-    data: Dataset, table: Table, context: TableContext, pagination: Optional[Pagination] = None, search_button: bool=True
+    data: Dataset, table: Table, context: TableContext, pagination: Optional[Pagination] = None, actions: bool=True, search_button: bool = True, download_button: bool = True
 ) -> Node:
     section = Node("section", attributes={"id": make_table_section_id(table)})
-    section += make_actions(data=data, table=table, context=context, search_button=search_button)
+    if actions:
+        section += make_actions(data=data, table=table, context=context, search_button=search_button, download_button=download_button)
     table_data = Node("div", attributes={"id": f"table-data-{table.id}"})
     table_wrapper = Node("div", attributes={"class": "rweb-datatable-wrapper"})
     table_data += table_wrapper
@@ -21,18 +22,19 @@ def render_table_section(
     return section
 
 
-def make_actions(data: Dataset, table: Table, context: TableContext, search_button: bool=True) -> Node:
+def make_actions(data: Dataset, table: Table, context: TableContext, search_button: bool = True, download_button: bool = True) -> Node:
     """
     Table section that includes filters, download button, column selector eventually
     """
     div = Node("div", attributes={"class": "d-flex justify-content-between align-items-center mb-3"})
-    download_url = url(context.path, download="csv", **context.args)
-    div.node("div", Node("a", "Download", attributes={"href": download_url, "class": "btn btn-primary "}))
+    if download_button:
+        download_url = url(context.path, download="csv", **context.args)
+        div.node("div", Node("a", "Download", attributes={"href": download_url, "class": "btn btn-primary "}))
     form = div.node(
         "form",
         attributes={
             "method": "GET",
-            "class": "input-group",
+            "class": "input-group ml-auto",
             "style": "max-width: 15rem",
             "hx-get": url(context.path, args=context.args, exclude=["search"]),
             "hx-target": context.hx_target,
@@ -66,7 +68,9 @@ def make_actions(data: Dataset, table: Table, context: TableContext, search_butt
 
 
 def make_table(data: Dataset, table: Table, context: TableContext) -> Node:
-    t = Node("table", attributes={"id": f"table-{table.id}", "class": "table table-striped table-hover table-sm " + table.extra_classes})
+    t = Node(
+        "table", attributes={"id": f"table-{table.id}", "class": "table table-striped table-hover table-sm " + table.extra_classes}
+    )
     t += make_thead(table=table, data=data, context=context)
     t += make_tbody(table=table, data=data, context=context)
     if data.totals:
@@ -123,7 +127,10 @@ def make_th(table: Table, data: Dataset, context: TableContext, column: Column) 
         target = a
     target += column.title.format(**context.args, **context.extra_args)
     target += " "
-    target += Node("span", sort_symbol,)
+    target += Node(
+        "span",
+        sort_symbol,
+    )
     return th
 
 
@@ -175,12 +182,8 @@ def make_pagination(context: TableContext, pagination: Pagination):
     p = Node("nav", attributes={"aria-label": "Paginate Table"})
     ul = p.node("ul", attributes={"class": "pagination"})
 
-    ul += make_pagination_li(
-        text="First", pagination_url=pagination.first_url, target=target, aria_label="Goto First Page"
-    )
-    ul += make_pagination_li(
-        text="Prev", pagination_url=pagination.prev_url, target=target, aria_label="Goto Previous Page"
-    )
+    ul += make_pagination_li(text="First", pagination_url=pagination.first_url, target=target, aria_label="Goto First Page")
+    ul += make_pagination_li(text="Prev", pagination_url=pagination.prev_url, target=target, aria_label="Goto Previous Page")
 
     for page_link in pagination.page_links:
         ul += make_pagination_li(
@@ -191,12 +194,8 @@ def make_pagination(context: TableContext, pagination: Pagination):
             is_current=page_link.is_current,
         )
 
-    ul += make_pagination_li(
-        text="Next", pagination_url=pagination.next_url, target=target, aria_label="Goto Next Page"
-    )
-    ul += make_pagination_li(
-        text="Last", pagination_url=pagination.last_url, target=target, aria_label="Goto Last Page"
-    )
+    ul += make_pagination_li(text="Next", pagination_url=pagination.next_url, target=target, aria_label="Goto Next Page")
+    ul += make_pagination_li(text="Last", pagination_url=pagination.last_url, target=target, aria_label="Goto Last Page")
 
     current_position = Node(
         "span",
@@ -231,5 +230,9 @@ def make_pagination_li(
             }
         )
     li = Node("li", attributes=li_attributes)
-    li += Node("a", text, attributes=a_attributes,)
+    li += Node(
+        "a",
+        text,
+        attributes=a_attributes,
+    )
     return li
